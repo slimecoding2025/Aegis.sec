@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aegis Security | Next-Gen Digital Protection & Recovery</title>
+<meta name="description" content="Aegis Security — boutique cybersecurity operation led by a dedicated senior specialist. Account recovery, web & server auditing, executive asset protection.">
+
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          void: '#0B0F19',
+          panel: '#0F1521',
+          panel2: '#131B2A',
+          line: '#1E2A3D',
+          cyan: {
+            DEFAULT: '#00F0FF',
+            dim: '#0891A8',
+          },
+          emerald: {
+            DEFAULT: '#10B981',
+            dim: '#0B7A56',
+          },
+          muted: '#8291A8',
+        },
+        fontFamily: {
+          mono: ['"JetBrains Mono"', 'monospace'],
+          sans: ['Inter', 'sans-serif'],
+        },
+      }
+    }
+  }
+</script>
+
+<style>
+  :root{
+    --cyan: #00F0FF;
+    --emerald: #10B981;
+    --void: #0B0F19;
+  }
+  *{ scrollbar-width: thin; scrollbar-color: #1E2A3D #0B0F19; }
+  ::-webkit-scrollbar{ width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track{ background: #0B0F19; }
+  ::-webkit-scrollbar-thumb{ background: #1E2A3D; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover{ background: #00F0FF; }
+
+  html{ scroll-behavior: smooth; }
+  body{
+    background-color: var(--void);
+    color: #E7ECF3;
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+  }
+  .font-display{ font-family: 'JetBrains Mono', monospace; }
+
+  ::selection{ background: rgba(0,240,255,0.25); color: #fff; }
+
+  /* Focus visibility */
+  a:focus-visible, button:focus-visible{
+    outline: 2px solid var(--cyan);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Hex grid backdrop */
+  .hex-grid{
+    background-image:
+      linear-gradient(30deg, #101826 12%, transparent 12.5%, transparent 87%, #101826 87.5%, #101826),
+      linear-gradient(150deg, #101826 12%, transparent 12.5%, transparent 87%, #101826 87.5%, #101826),
+      linear-gradient(30deg, #101826 12%, transparent 12.5%, transparent 87%, #101826 87.5%, #101826),
+      linear-gradient(150deg, #101826 12%, transparent 12.5%, transparent 87%, #101826 87.5%, #101826);
+    background-size: 64px 112px;
+    background-position: 0 0, 0 0, 32px 56px, 32px 56px;
+    opacity: 0.35;
+  }
+
+  .grid-fade{
+    background-image: linear-gradient(rgba(0,240,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,240,255,0.06) 1px, transparent 1px);
+    background-size: 42px 42px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 20%, black 40%, transparent 90%);
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 20%, black 40%, transparent 90%);
+  }
+
+  .glass{
+    background: linear-gradient(180deg, rgba(19,27,42,0.65), rgba(15,21,33,0.55));
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(0,240,255,0.08);
+  }
+
+  .glow-border{
+    position: relative;
+    isolation: isolate;
+  }
+  .glow-border::before{
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(0,240,255,0.35), rgba(16,185,129,0.15), transparent 60%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .service-card{
+    transition: transform .45s cubic-bezier(.2,.8,.2,1), box-shadow .45s ease, border-color .45s ease;
+  }
+  .service-card:hover{
+    transform: translateY(-6px) scale(1.015);
+    box-shadow: 0 0 0 1px rgba(0,240,255,0.25), 0 30px 60px -20px rgba(0,240,255,0.15), 0 0 40px -10px rgba(0,240,255,0.2);
+  }
+
+  .text-glow{ text-shadow: 0 0 24px rgba(0,240,255,0.35); }
+  .cyan-glow-btn{
+    box-shadow: 0 0 0 1px rgba(0,240,255,0.4), 0 0 24px rgba(0,240,255,0.25), inset 0 0 20px rgba(0,240,255,0.05);
+    transition: box-shadow .3s ease, transform .3s ease;
+  }
+  .cyan-glow-btn:hover{
+    box-shadow: 0 0 0 1px rgba(0,240,255,0.7), 0 0 44px rgba(0,240,255,0.5), inset 0 0 20px rgba(0,240,255,0.1);
+    transform: translateY(-2px);
+  }
+
+  /* Scanline sweep */
+  @keyframes scan{
+    0%{ transform: translateY(-100%); }
+    100%{ transform: translateY(100%); }
+  }
+  .scanline{
+    position: absolute; left:0; right:0; height: 40%;
+    background: linear-gradient(180deg, transparent, rgba(0,240,255,0.08), transparent);
+    animation: scan 6s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes blink{
+    0%,49%{ opacity: 1; } 50%,100%{ opacity: 0; }
+  }
+  .caret{ animation: blink 1s step-end infinite; }
+
+  @keyframes floatY{
+    0%,100%{ transform: translateY(0); }
+    50%{ transform: translateY(-10px); }
+  }
+  .float{ animation: floatY 5s ease-in-out infinite; }
+
+  @keyframes pulseDot{
+    0%{ box-shadow: 0 0 0 0 rgba(16,185,129,0.6); }
+    70%{ box-shadow: 0 0 0 10px rgba(16,185,129,0); }
+    100%{ box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+  }
+  .pulse-dot{ animation: pulseDot 2s infinite; }
+
+  .reveal{
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity .7s ease, transform .7s ease;
+  }
+  .reveal.in{
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .scanline, .float, .pulse-dot{ animation: none !important; }
+    .reveal{ transition: none; opacity: 1; transform: none; }
+  }
+
+  .badge-payment{
+    transition: transform .3s ease, border-color .3s ease;
+  }
+  .badge-payment:hover{ transform: translateY(-4px); }
+
+  .nav-link{ position: relative; }
+  .nav-link::after{
+    content:''; position:absolute; left:0; bottom:-4px; width:0; height:1px; background: var(--cyan);
+    transition: width .3s ease;
+  }
+  .nav-link:hover::after{ width: 100%; }
+
+  .clip-hex{
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  }
+
+  .stat-num{ font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body class="bg-void antialiased selection:bg-cyan/20">
+
+<!-- ================= NAV ================= -->
+<header class="fixed top-0 inset-x-0 z-50">
+  <div class="glass border-b border-line/60">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
+      <a href="#top" class="flex items-center gap-2.5 group">
+        <span class="relative w-9 h-9 grid place-items-center">
+          <i class="fa-solid fa-shield-halved text-cyan text-xl group-hover:text-glow transition"></i>
+          <span class="absolute inset-0 rounded-full bg-cyan/10 blur-md"></span>
+        </span>
+        <span class="font-display font-bold tracking-wide text-sm sm:text-base">AEGIS<span class="text-cyan">.</span>SEC</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8 font-mono text-[13px] uppercase tracking-widest text-muted">
+        <a href="#services" class="nav-link hover:text-white transition">Services</a>
+        <a href="#why" class="nav-link hover:text-white transition">Protocol</a>
+        <a href="#stats" class="nav-link hover:text-white transition">Status</a>
+        <a href="#payments" class="nav-link hover:text-white transition">Payments</a>
+        <a href="#contact" class="nav-link hover:text-white transition">Contact</a>
+      </nav>
+
+      <a href="https://wa.me/21627870862" target="_blank" rel="noopener"
+         class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-md bg-cyan/10 border border-cyan/40 text-cyan text-xs font-mono uppercase tracking-widest cyan-glow-btn">
+        <i class="fa-brands fa-whatsapp"></i> Secure Line
+      </a>
+
+      <button id="menuBtn" aria-label="Open menu" aria-expanded="false" class="md:hidden text-xl text-white/90">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobileMenu" class="md:hidden hidden glass border-b border-line/60">
+    <div class="px-5 py-5 flex flex-col gap-4 font-mono text-sm uppercase tracking-widest text-muted">
+      <a href="#services" class="mobile-link hover:text-cyan transition">Services</a>
+      <a href="#why" class="mobile-link hover:text-cyan transition">Protocol</a>
+      <a href="#stats" class="mobile-link hover:text-cyan transition">Status</a>
+      <a href="#payments" class="mobile-link hover:text-cyan transition">Payments</a>
+      <a href="#contact" class="mobile-link hover:text-cyan transition">Contact</a>
+      <a href="https://wa.me/21627870862" target="_blank" rel="noopener" class="mt-2 text-center py-2.5 rounded-md bg-cyan/10 border border-cyan/40 text-cyan">
+        <i class="fa-brands fa-whatsapp"></i> Secure Line
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section id="top" class="relative min-h-screen flex items-center pt-28 pb-20 overflow-hidden">
+  <div class="absolute inset-0 hex-grid"></div>
+  <div class="absolute inset-0 grid-fade"></div>
+  <div class="absolute -top-40 -right-40 w-[36rem] h-[36rem] bg-cyan/10 rounded-full blur-[140px]"></div>
+  <div class="absolute -bottom-40 -left-40 w-[30rem] h-[30rem] bg-emerald/10 rounded-full blur-[140px]"></div>
+
+  <div class="relative max-w-7xl mx-auto px-5 sm:px-8 grid lg:grid-cols-2 gap-14 items-center w-full">
+
+    <div class="reveal">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-emerald/30 bg-emerald/5 text-emerald text-[11px] font-mono uppercase tracking-[0.2em] mb-6">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald pulse-dot"></span>
+        Specialist Online — Accepting New Cases
+      </div>
+
+      <h1 class="font-display font-extrabold leading-[1.05] text-4xl sm:text-5xl lg:text-6xl tracking-tight">
+        <span class="block text-white">AEGIS SECURITY</span>
+        <span class="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan via-cyan to-emerald text-glow">
+          Next-Gen Digital Protection & Recovery
+        </span>
+      </h1>
+
+      <p class="mt-6 text-muted text-base sm:text-lg max-w-xl leading-relaxed">
+        A boutique operation, handled start to finish by one dedicated senior specialist —
+        no call centers, no outsourcing, no leaks. Account recovery, infrastructure audits,
+        and executive-grade protection, under strict NDA.
+      </p>
+
+      <div class="mt-9 flex flex-col sm:flex-row gap-4">
+        <a href="https://wa.me/21627870862" target="_blank" rel="noopener"
+           class="cyan-glow-btn inline-flex items-center justify-center gap-3 px-7 py-4 rounded-md bg-cyan text-void font-mono font-bold uppercase tracking-widest text-sm hover:bg-cyan/90 transition">
+          <i class="fa-brands fa-whatsapp text-lg"></i>
+          Request Security Consultation
+        </a>
+        <a href="#services"
+           class="inline-flex items-center justify-center gap-3 px-7 py-4 rounded-md border border-line text-white/80 font-mono uppercase tracking-widest text-sm hover:border-cyan/50 hover:text-white transition">
+          View Services <i class="fa-solid fa-arrow-down text-xs"></i>
+        </a>
+      </div>
+
+      <div class="mt-10 flex items-center gap-6 text-muted text-xs font-mono uppercase tracking-widest">
+        <div class="flex items-center gap-2"><i class="fa-solid fa-lock text-cyan"></i> NDA-First</div>
+        <div class="flex items-center gap-2"><i class="fa-solid fa-user-shield text-cyan"></i> 1-on-1 Handling</div>
+        <div class="flex items-center gap-2"><i class="fa-solid fa-bolt text-cyan"></i> Fast Response</div>
+      </div>
+    </div>
+
+    <!-- Terminal / matrix visual -->
+    <div class="reveal relative">
+      <div class="relative rounded-xl glass glow-border overflow-hidden shadow-2xl shadow-black/60 float">
+        <div class="scanline"></div>
+        <div class="flex items-center gap-2 px-4 py-3 border-b border-line/70 bg-panel2/70">
+          <span class="w-3 h-3 rounded-full bg-red-500/70"></span>
+          <span class="w-3 h-3 rounded-full bg-yellow-500/70"></span>
+          <span class="w-3 h-3 rounded-full bg-emerald/70"></span>
+          <span class="ml-3 font-mono text-[11px] text-muted">aegis@ops:~/incident_response</span>
+        </div>
+        <div id="terminal" class="p-5 sm:p-6 font-mono text-[12.5px] sm:text-[13.5px] leading-relaxed h-[320px] sm:h-[360px] overflow-hidden text-emerald/90">
+        </div>
+      </div>
+      <div class="absolute -bottom-6 -left-6 hidden sm:flex items-center gap-3 glass glow-border rounded-lg px-4 py-3">
+        <i class="fa-solid fa-shield-halved text-emerald"></i>
+        <div class="font-mono text-xs">
+          <div class="text-white">Threat Level</div>
+          <div class="text-emerald">CONTAINED</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= STATS ================= -->
+<section id="stats" class="relative py-20 border-y border-line/60 bg-panel/40">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
+
+      <div class="reveal text-center sm:text-left sm:border-r sm:border-line/60 sm:pr-8">
+        <div class="font-display text-4xl sm:text-5xl font-extrabold text-cyan text-glow stat-num" data-count="147" data-suffix="+">0</div>
+        <div class="mt-2 text-muted font-mono text-xs uppercase tracking-[0.2em]">Active &amp; Completed Audits</div>
+      </div>
+
+      <div class="reveal text-center sm:text-left sm:border-r sm:border-line/60 sm:pr-8">
+        <div class="font-display text-4xl sm:text-5xl font-extrabold text-emerald stat-num" data-count="312" data-suffix="+">0</div>
+        <div class="mt-2 text-muted font-mono text-xs uppercase tracking-[0.2em]">Accounts Restored</div>
+      </div>
+
+      <div class="reveal text-center sm:text-left">
+        <div class="font-display text-4xl sm:text-5xl font-extrabold text-white stat-num" data-count="99.9" data-suffix="%">0</div>
+        <div class="mt-2 text-muted font-mono text-xs uppercase tracking-[0.2em]">Client Security Rating</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= SERVICES ================= -->
+<section id="services" class="relative py-28">
+  <div class="absolute inset-0 hex-grid opacity-20"></div>
+  <div class="relative max-w-7xl mx-auto px-5 sm:px-8">
+
+    <div class="reveal max-w-2xl mb-16">
+      <div class="font-mono text-cyan text-xs uppercase tracking-[0.3em] mb-3">// Core Capabilities</div>
+      <h2 class="font-display text-3xl sm:text-4xl font-bold text-white">Operational Services</h2>
+      <p class="mt-4 text-muted leading-relaxed">Three disciplines. One specialist. Every engagement is scoped, executed, and reported personally — nothing is delegated.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+
+      <!-- Card 1 -->
+      <div class="service-card glass glow-border rounded-xl p-7 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-[0.06] bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=60')"></div>
+        <div class="relative">
+          <div class="w-12 h-12 rounded-lg bg-cyan/10 border border-cyan/30 grid place-items-center mb-6">
+            <i class="fa-solid fa-user-lock text-cyan text-xl"></i>
+          </div>
+          <h3 class="font-display text-lg font-bold text-white mb-3">Social Media &amp; Account Recovery</h3>
+          <p class="text-muted text-sm leading-relaxed mb-5">Fast, methodical recovery for locked, disabled, or impersonated accounts across Meta, TikTok, and Google.</p>
+          <ul class="space-y-2.5 text-sm text-white/80">
+            <li class="flex gap-2"><i class="fa-solid fa-check text-emerald mt-1 text-xs"></i>Unban &amp; disabled-account appeals</li>
+            <li class="flex gap-2"><i class="fa-solid fa-check text-emerald mt-1 text-xs"></i>Impersonation takedowns</li>
+            <li class="flex gap-2"><i class="fa-solid fa-check text-emerald mt-1 text-xs"></i>Meta, TikTok &amp; Google case escalation</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="service-card glass glow-border rounded-xl p-7 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-[0.06] bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=60')"></div>
+        <div class="relative">
+          <div class="w-12 h-12 rounded-lg bg-emerald/10 border border-emerald/30 grid place-items-center mb-6">
+            <i class="fa-solid fa-server text-emerald text-xl"></i>
+          </div>
+          <h3 class="font-display text-lg font-bold text-white mb-3">Web &amp; Server Security Auditing</h3>
+          <p class="text-muted text-sm leading-relaxed mb-5">Full-spectrum vulnerability assessment combining automated scanning with hands-on manual review.</p>
+          <ul class="space-y-2.5 text-sm text-white/80">
+            <li class="flex gap-2"><i class="fa-solid fa-check text-emerald mt-1 text-xs"></i>Automated &amp; manual vulnerability scans</li>
+            <li class="flex gap-2"><i class="fa-solid fa-check text-emerald mt-1 text-xs"></i>HTTP header hardening &amp; SSL checks</li>
+            <li class="flex gap-2"><i class="fa-solid fa-check text-emerald mt-1 text-xs"></i>Open port &amp; exposure analysis</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="service-card glass glow-border rounded-xl p-7 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-[0.06] bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=60')"></div>
+        <div class="relative">
+          <div class="w-12 h-12 rounded-lg bg-cyan/10 border border-cyan/30 grid place-items-center mb-6">
+            <i class="fa-solid fa-key text-cyan text-xl"></i>
+          </div>
+          <h3 class="font-display text-lg font-bold text-white mb-3">Brand &amp; Executive Asset Protection</h3>
+          <p class="text-muted text-sm leading-relaxed mb-5">Hardened identity infrastructure for founders, executives, and brand accounts against targeted attacks.</p>
+          <ul class="space-y-2.5 text-sm text-white/80">
+            <li class="flex gap-2"><i class="fa-solid fa-check text-emerald mt-1 text-xs"></i>2FA / MFA configuration</li>
+            <li class="flex gap-2"><i class="fa-solid fa-check text-emerald mt-1 text-xs"></i>Phishing-resistance training</li>
+            <li class="flex gap-2"><i class="fa-solid fa-check text-emerald mt-1 text-xs"></i>Hardware key integration &amp; monitoring</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= WHY CHOOSE ================= -->
+<section id="why" class="relative py-28 bg-panel/40 border-y border-line/60 overflow-hidden">
+  <div class="absolute inset-0 opacity-10 bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1600&q=60')"></div>
+  <div class="relative max-w-7xl mx-auto px-5 sm:px-8 grid lg:grid-cols-2 gap-16 items-center">
+
+    <div class="reveal">
+      <div class="font-mono text-emerald text-xs uppercase tracking-[0.3em] mb-3">// Why Aegis</div>
+      <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mb-6">One Specialist. Zero Middlemen.</h2>
+      <p class="text-muted leading-relaxed mb-8">
+        Larger firms route your case through juniors, ticket queues, and account managers.
+        Aegis Security is built on the opposite principle: the person who audits your infrastructure
+        is the same person who signs your NDA and answers your messages.
+      </p>
+
+      <div class="space-y-6">
+        <div class="flex gap-4">
+          <div class="w-10 h-10 shrink-0 rounded-lg bg-cyan/10 border border-cyan/30 grid place-items-center"><i class="fa-solid fa-user-shield text-cyan"></i></div>
+          <div>
+            <h4 class="font-semibold text-white mb-1">Direct 1-on-1 Handling</h4>
+            <p class="text-muted text-sm leading-relaxed">Every audit, recovery, and configuration is performed personally by the lead specialist — never subcontracted.</p>
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <div class="w-10 h-10 shrink-0 rounded-lg bg-emerald/10 border border-emerald/30 grid place-items-center"><i class="fa-solid fa-file-signature text-emerald"></i></div>
+          <div>
+            <h4 class="font-semibold text-white mb-1">Strict NDA on Every Engagement</h4>
+            <p class="text-muted text-sm leading-relaxed">Your data, credentials, and case details stay confidential — formalized before any work begins.</p>
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <div class="w-10 h-10 shrink-0 rounded-lg bg-cyan/10 border border-cyan/30 grid place-items-center"><i class="fa-solid fa-gauge-high text-cyan"></i></div>
+          <div>
+            <h4 class="font-semibold text-white mb-1">Fast, Focused Execution</h4>
+            <p class="text-muted text-sm leading-relaxed">No approval chains. Decisions and fixes happen in real time, directly with the person doing the work.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal relative">
+      <div class="rounded-xl overflow-hidden glow-border relative">
+        <img src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=1200&q=70" alt="Dark server room with glowing blue circuitry" class="w-full h-[420px] object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-void via-void/20 to-transparent"></div>
+        <div class="absolute bottom-5 left-5 right-5 glass rounded-lg px-5 py-4 flex items-center justify-between">
+          <div class="font-mono text-xs text-muted uppercase tracking-widest">Case Handler</div>
+          <div class="font-mono text-sm text-cyan">Lead Specialist — On Duty</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= PAYMENTS ================= -->
+<section id="payments" class="relative py-28">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+
+    <div class="reveal max-w-2xl mb-14">
+      <div class="font-mono text-cyan text-xs uppercase tracking-[0.3em] mb-3">// Accepted Payment Methods</div>
+      <h2 class="font-display text-3xl sm:text-4xl font-bold text-white">Flexible, Discreet Settlement</h2>
+      <p class="mt-4 text-muted leading-relaxed">Chosen together once your service scope and NDA are confirmed.</p>
+    </div>
+
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-5">
+
+      <div class="badge-payment glass rounded-xl p-6 text-center border border-line/60 hover:border-cyan/40">
+        <div class="w-14 h-14 mx-auto rounded-full bg-cyan/10 border border-cyan/30 grid place-items-center mb-4">
+          <i class="fa-solid fa-wallet text-cyan text-xl"></i>
+        </div>
+        <div class="font-display font-bold text-white text-sm">Flouci</div>
+        <div class="text-muted text-xs mt-1 font-mono">Tunisian Digital Wallet</div>
+      </div>
+
+      <div class="badge-payment glass rounded-xl p-6 text-center border border-line/60 hover:border-cyan/40">
+        <div class="w-14 h-14 mx-auto rounded-full bg-emerald/10 border border-emerald/30 grid place-items-center mb-4">
+          <i class="fa-solid fa-building-columns text-emerald text-xl"></i>
+        </div>
+        <div class="font-display font-bold text-white text-sm">Bank Transfer</div>
+        <div class="text-muted text-xs mt-1 font-mono">RIB / Wire Transfer</div>
+      </div>
+
+      <div class="badge-payment glass rounded-xl p-6 text-center border border-line/60 hover:border-cyan/40">
+        <div class="w-14 h-14 mx-auto rounded-full bg-cyan/10 border border-cyan/30 grid place-items-center mb-4">
+          <i class="fa-brands fa-bitcoin text-cyan text-xl"></i>
+        </div>
+        <div class="font-display font-bold text-white text-sm">Binance</div>
+        <div class="text-muted text-xs mt-1 font-mono">USDT / Crypto</div>
+      </div>
+
+      <div class="badge-payment glass rounded-xl p-6 text-center border border-line/60 hover:border-cyan/40">
+        <div class="w-14 h-14 mx-auto rounded-full bg-emerald/10 border border-emerald/30 grid place-items-center mb-4">
+          <i class="fa-solid fa-mobile-screen text-emerald text-xl"></i>
+        </div>
+        <div class="font-display font-bold text-white text-sm">D17</div>
+        <div class="text-muted text-xs mt-1 font-mono">Tunisian Postal Mobile Pay</div>
+      </div>
+
+    </div>
+
+    <div class="reveal mt-8 glass border border-line/60 rounded-xl px-6 py-5 flex items-start gap-4">
+      <i class="fa-solid fa-circle-info text-cyan mt-1"></i>
+      <p class="text-sm text-muted leading-relaxed">
+        Payment details and instructions are provided directly after signing the agreement/NDA and confirming the service scope.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section id="contact" class="relative py-28 border-t border-line/60 overflow-hidden">
+  <div class="absolute inset-0 hex-grid opacity-20"></div>
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[40rem] h-[40rem] bg-cyan/10 rounded-full blur-[160px]"></div>
+
+  <div class="relative max-w-4xl mx-auto px-5 sm:px-8 text-center">
+    <div class="reveal">
+      <div class="font-mono text-emerald text-xs uppercase tracking-[0.3em] mb-3">// Establish Contact</div>
+      <h2 class="font-display text-3xl sm:text-5xl font-bold text-white mb-6">Ready to Secure Your Assets?</h2>
+      <p class="text-muted max-w-xl mx-auto leading-relaxed mb-10">
+        Reach out directly. Every conversation is handled personally by the lead specialist and treated as confidential from the first message.
+      </p>
+
+      <div class="flex flex-col sm:flex-row justify-center gap-4 mb-14">
+        <a href="https://wa.me/21627870862" target="_blank" rel="noopener"
+           class="cyan-glow-btn inline-flex items-center justify-center gap-3 px-8 py-4 rounded-md bg-cyan text-void font-mono font-bold uppercase tracking-widest text-sm hover:bg-cyan/90 transition">
+          <i class="fa-brands fa-whatsapp text-lg"></i> WhatsApp: +216 27 87 08 62
+        </a>
+        <a href="mailto:contact.aegis.sec@gmail.com"
+           class="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-md border border-line text-white/80 font-mono uppercase tracking-widest text-sm hover:border-emerald/50 hover:text-white transition">
+          <i class="fa-solid fa-envelope"></i> contact.aegis.sec@gmail.com
+        </a>
+      </div>
+
+      <div class="inline-flex items-center gap-2 text-xs font-mono text-muted uppercase tracking-widest">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald pulse-dot"></span>
+        Response time: under 24 hours
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="border-t border-line/60 py-10">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-2.5">
+      <i class="fa-solid fa-shield-halved text-cyan"></i>
+      <span class="font-display font-bold text-sm tracking-wide">AEGIS<span class="text-cyan">.</span>SEC</span>
+    </div>
+    <p class="text-muted text-xs font-mono text-center">© 2026 Aegis Security. Confidential by design. All engagements NDA-protected.</p>
+  </div>
+</footer>
+
+<!-- ================= FLOATING WHATSAPP FAB ================= -->
+<a href="https://wa.me/21627870862" target="_blank" rel="noopener" aria-label="Contact Aegis Security on WhatsApp"
+   class="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-emerald grid place-items-center shadow-lg shadow-emerald/40 hover:scale-110 transition-transform">
+  <span class="absolute inset-0 rounded-full bg-emerald/50 animate-ping"></span>
+  <i class="fa-brands fa-whatsapp text-2xl text-void relative"></i>
+</a>
+
+<script>
+  // Mobile menu toggle
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  menuBtn.addEventListener('click', () => {
+    const isHidden = mobileMenu.classList.contains('hidden');
+    mobileMenu.classList.toggle('hidden');
+    menuBtn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+    menuBtn.innerHTML = isHidden ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fa-solid fa-bars"></i>';
+  });
+  document.querySelectorAll('.mobile-link').forEach(el => {
+    el.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+      menuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
+      menuBtn.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  reveals.forEach(el => io.observe(el));
+
+  // Animated counters
+  const counters = document.querySelectorAll('.stat-num');
+  const animateCounter = (el) => {
+    const target = parseFloat(el.dataset.count);
+    const suffix = el.dataset.suffix || '';
+    const isDecimal = target % 1 !== 0;
+    const duration = 1800;
+    const start = performance.now();
+    const step = (now) => {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const value = target * eased;
+      el.textContent = (isDecimal ? value.toFixed(1) : Math.floor(value)) + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
+  const counterIO = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCounter(entry.target);
+        counterIO.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  counters.forEach(el => counterIO.observe(el));
+
+  // Terminal typing animation
+  const terminalLines = [
+    { text: '$ aegis-scan --target account.recovery --platform meta', color: 'text-white/70' },
+    { text: '  [OK] Identity verification chain established', color: 'text-emerald' },
+    { text: '  [OK] Appeal package compiled', color: 'text-emerald' },
+    { text: '$ aegis-audit --scope web-server --mode full', color: 'text-white/70' },
+    { text: '  [SCAN] Checking SSL/TLS configuration...', color: 'text-cyan' },
+    { text: '  [SCAN] Analyzing HTTP security headers...', color: 'text-cyan' },
+    { text: '  [SCAN] Enumerating open ports...', color: 'text-cyan' },
+    { text: '  [WARN] 2 headers missing hardening rules', color: 'text-yellow-400' },
+    { text: '  [FIX]  Headers patched, re-validating...', color: 'text-emerald' },
+    { text: '$ aegis-protect --enable mfa --hardware-key yubikey', color: 'text-white/70' },
+    { text: '  [OK] Phishing-resistant auth enabled', color: 'text-emerald' },
+    { text: '  [OK] Active monitoring initialized', color: 'text-emerald' },
+    { text: '$ status --report', color: 'text-white/70' },
+    { text: '  THREAT LEVEL ......... CONTAINED', color: 'text-emerald font-bold' },
+    { text: '  SECURITY RATING ...... 99.9%', color: 'text-cyan font-bold' },
+  ];
+
+  const terminalEl = document.getElementById('terminal');
+  let lineIndex = 0;
+
+  function typeLine() {
+    if (lineIndex >= terminalLines.length) {
+      setTimeout(() => {
+        terminalEl.innerHTML = '';
+        lineIndex = 0;
+        typeLine();
+      }, 2500);
+      return;
+    }
+    const { text, color } = terminalLines[lineIndex];
+    const lineDiv = document.createElement('div');
+    lineDiv.className = color + ' whitespace-pre';
+    terminalEl.appendChild(lineDiv);
+
+    let charIndex = 0;
+    const speed = 14;
+    const typeChar = () => {
+      if (charIndex <= text.length) {
+        lineDiv.textContent = text.slice(0, charIndex);
+        charIndex++;
+        setTimeout(typeChar, speed);
+      } else {
+        lineIndex++;
+        terminalEl.scrollTop = terminalEl.scrollHeight;
+        setTimeout(typeLine, 220);
+      }
+    };
+    typeChar();
+  }
+  typeLine();
+
+  // Blinking caret at end of terminal
+  setInterval(() => {
+    // no-op placeholder retained for potential future caret element
+  }, 1000);
+</script>
+
+</body>
+</html>
